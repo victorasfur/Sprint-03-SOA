@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulação Financeira & Gamificação</title>
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --secondary-color: #f0f4f8;
+            --background-color: #ffffff;
+            --text-color: #333;
+            --card-background: #ffffff;
+            --border-color: #e0e0e0;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.5s ease;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 3em auto;
+            padding: 2em;
+            background-color: var(--background-color);
+            border-radius: 12px;
+            box-shadow: var(--box-shadow);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 1.5em;
+            font-weight: 600;
+        }
+
+        .card {
+            background-color: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2em;
+            margin-bottom: 2em;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        h2 {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5em;
+            color: var(--text-color);
+            margin-top: 0;
+            font-weight: 500;
+        }
+
+        label {
+            display: block;
+            margin-top: 1.5em;
+            font-weight: 600;
+            color: #555;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        input, button {
+            display: block;
+            width: 100%;
+            padding: 0.8em;
+            margin-top: 0.5em;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 2em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        #result, #scores {
+            margin-top: 1.5em;
+            padding: 1.5em;
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            text-align: center;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        
+        #result p {
+            font-size: 1.1em;
+            margin: 0.8em 0;
+        }
+        
+        #result h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5em;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            text-align: left;
+            transition: background-color 0.3s ease;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simulação e Gamificação</h1>
+
+        <div class="card">
+            <h2>Simulação Financeira</h2>
+            <form id="simulationForm">
+                <label for="initialInvestment">Investimento Inicial:</label>
+                <input type="number" id="initialInvestment" name="initialInvestment" required step="0.01">
+
+                <label for="monthlyContribution">Contribuição Mensal:</label>
+                <input type="number" id="monthlyContribution" name="monthlyContribution" required step="0.01">
+
+                <label for="interestRate">Taxa de Juros Anual (%):</label>
+                <input type="number" id="interestRate" name="interestRate" required step="0.01">
+
+                <label for="periodInMonths">Período (meses):</label>
+                <input type="number" id="periodInMonths" name="periodInMonths" required>
+
+                <button type="submit">Calcular Simulação</button>
+            </form>
+            <div id="result"></div>
+        </div>
+
+        <div class="card">
+            <h2>Scores de Usuários</h2>
+            <div id="scores">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Usuário</th>
+                            <th>Pontuação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scoresTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8080/api';
+
+        document.getElementById('simulationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const data = {
+                initialValue: parseFloat(form.initialInvestment.value),
+                monthlyInvestment: parseFloat(form.monthlyContribution.value),
+                interestRate: parseFloat(form.interestRate.value),
+                months: parseInt(form.periodInMonths.value)
+            };
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Calculando...';
+
+            try {
+                const response = await fetch(`${API_URL}/simulations/simulate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <h3>Resultado da Simulação</h3>
+                        <p>Montante Final: R$ ${result.finalValue.toFixed(2)}</p>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<p style="color:red;">Erro: ${result.message || 'Ocorreu um erro.'}</p>`;
+                }
+            } catch (error) {
+                console.error('Erro ao conectar com a API:', error);
+                resultDiv.innerHTML = `<p style="color:red;">Erro ao conectar com o servidor. Verifique se a aplicação está rodando.</p>`;
+            }
+        });
+
+        async function fetchScores() {
+            try {
+                const response = await fetch(`${API_URL}/gamification/scores`);
+                const scores = await response.json();
+                const tableBody = document.getElementById('scoresTableBody');
+                tableBody.innerHTML = '';
+                scores.forEach(score => {
+                    const row = `<tr><td>${score.userId}</td><td>${score.score}</td></tr>`;
+                    tableBody.innerHTML += row;
+                });
+            } catch (error) {
+                console.error('Erro ao buscar scores:', error);
+            }
+        }
+
+        fetchScores();
+        setInterval(fetchScores, 5000); // Atualiza os scores a cada 5 segundos
+    </script>
+</body>
+</html>
